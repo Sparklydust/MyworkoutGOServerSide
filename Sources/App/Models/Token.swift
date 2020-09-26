@@ -9,7 +9,6 @@ import Vapor
 import Fluent
 
 enum SessionSource: Int, Content {
-
   case signUp
   case logIn
 }
@@ -38,4 +37,9 @@ final class Token: Model {
     self.value = token
     self.source = source
   }
+}
+
+extension Token: ModelTokenAuthenticatable {
+  static let valueKey = \Token.$value
+  static let userKey = \Token.$user
 }
