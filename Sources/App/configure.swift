@@ -16,6 +16,10 @@ public func configure(_ app: Application) throws {
 
   app.migrations.add(CreateUser())
 
+  app.logger.logLevel = .debug
+
+  try app.autoMigrate().wait()
+  
   // register routes
   try routes(app)
 }
