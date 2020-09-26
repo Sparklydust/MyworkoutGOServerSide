@@ -30,10 +30,12 @@ struct UsersController: RouteCollection {
 
   func boot(routes: RoutesBuilder) throws {
     let usersRoute = routes.grouped("api", "users")
-
     usersRoute.post("signup", use: create)
-//    usersRoute.get("all", use: getAll)
-//    usersRoute.get("userID", use: get)
+
+    let tokenRoute = usersRoute.grouped(Token.authenticator())
+    tokenRoute.get("account", use: get)
+
+    //usersRoute.get("all", use: getAll)
   }
 
   /// Create a user to the database and retrieve a token and the public profile
@@ -62,17 +64,16 @@ struct UsersController: RouteCollection {
       }
   }
 
+  /// Fetch one user with id store in database
+  ///
+  func get(_ req: Request)throws -> User.Public {
+    try req.auth.require(User.self).asPublic()
+  }
+
 //  /// Fetch all users store in the database
 //  ///
 //  func getAll(_ req: Request) throws -> EventLoopFuture<[User]> {
 //    User.query(on: req.db).all()
-//  }
-//
-//  /// Fetch one user with id store in database
-//  ///
-//  func get(_ req: Request)throws -> EventLoopFuture<User> {
-//    User.find(req.parameters.get("userID"), on: req.db)
-//      .unwrap(or: Abort(.notFound))
 //  }
 }
 
