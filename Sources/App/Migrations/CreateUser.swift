@@ -13,7 +13,9 @@ struct CreateUser: Migration {
     database.schema("users")
       .id()
       .field("email", .string, .required)
+      .field("password", .string,.required)
       .field("gender", .string, .required)
+      .unique(on: "email")
       .create()
   }
 
