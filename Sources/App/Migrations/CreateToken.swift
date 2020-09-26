@@ -7,6 +7,9 @@
 
 import Fluent
 
+//  MARK: CreateToken
+/// Creation of the token psql table.
+///
 struct CreateToken: Migration {
 
   func prepare(on database: Database) -> EventLoopFuture<Void> {

@@ -1,5 +1,5 @@
 //
-//  UserError.swift
+//  NetworkError.swift
 //  
 //
 //  Created by Roland Lariotte on 26/09/2020.
@@ -7,11 +7,15 @@
 
 import Vapor
 
-enum UserError {
+//  MARK: NetworkError
+/// API call error handler to send to user.
+///
+enum NetworkError {
+  
   case emailAlreadyUsed
 }
 
-extension UserError: AbortError {
+extension NetworkError: AbortError {
   var description: String {
     reason
   }

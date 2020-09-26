@@ -15,7 +15,7 @@ You’ll need to have Docker installed and running. Visit the [Docker Website](h
 and follow the instructions to install it.
 
 
-2. Configure your PostgresSQL data base.
+2. Configure your PostgresSQL data base to run MyworkoutGOServerSide.
 
 In your Terminal, type the following to create a database.
 
@@ -35,11 +35,23 @@ docker ps
 ```
 
 
-3. Run MyworkoutGOServerSide
+3. Run MyworkoutGOServerSide scheme.
 
-- In the MyworkoutGOServerSide root project, start the server by running 
-clicking on the Package.swift.
+- In the MyworkoutGOServerSide root project, start the server by clicking on the Package.swift.
+
+- Wait for all package dependencies to download.
 
 - Set the active scheme to MyworkoutGOServerSide with My Mac as the destination. 
 
 - Build and run. Check the console and see that the migrations have run.
+
+- A successfull starting server message should shown in the Xcode console.
+
+- You can now run the MyworkoutGO application on device or in a simulator.
+
+
+
+4. Admin credentials: 
+
+- email: registered@email.com
+- password: password

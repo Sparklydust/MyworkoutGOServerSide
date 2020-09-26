@@ -7,6 +7,9 @@
 
 import Fluent
 
+//  MARK: CreateUser
+/// Creation of the user psql table.
+///
 struct CreateUser: Migration {
 
   func prepare(on database: Database) -> EventLoopFuture<Void> {

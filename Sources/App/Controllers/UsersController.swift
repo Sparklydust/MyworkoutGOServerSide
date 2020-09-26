@@ -8,27 +8,16 @@
 import Vapor
 import Fluent
 
-struct UserSignUp: Content {
-  let email: String
-  let password: String
-  let gender: String
-}
-
-struct NewSession: Content {
-  let token: String
-  let user: User.Public
-}
-
-extension UserSignUp: Validatable {
-  static func validations(_ validations: inout Validations) {
-    validations.add("email", as: String.self, is: !.empty)
-    validations.add("password", as: String.self, is: .count(1...))
-  }
-}
-
+//  MARK: UsersController
+/// Responsible for api path to handle all user
+/// data.
+///
 struct UsersController: RouteCollection {
 
+  /// Definition of api endpoints with associated method.
+  ///
   func boot(routes: RoutesBuilder) throws {
+
     let usersRoute = routes.grouped("api", "users")
     usersRoute.post("signup", use: create)
 
@@ -39,7 +28,7 @@ struct UsersController: RouteCollection {
     passwordProtected.post("login", use: login)
   }
 
-  /// Create a user to the database and retrieve a token and the public profile
+  /// Create a user to the database and retrieve a token and the public profile.
   ///
   func create(_ req: Request) throws -> EventLoopFuture<NewSession> {
 
@@ -51,7 +40,7 @@ struct UsersController: RouteCollection {
     return checkIfUserExists(userSignUp.email, req: req)
       .flatMap { exists in
         guard !exists else {
-          return req.eventLoop.future(error: UserError.emailAlreadyUsed)
+          return req.eventLoop.future(error: NetworkError.emailAlreadyUsed)
         }
         return user.save(on: req.db) }
       .flatMap {
@@ -65,7 +54,7 @@ struct UsersController: RouteCollection {
       }
   }
 
-  /// Fetch one user with id store in database
+  /// Fetch one user with id store in database.
   ///
   func get(_ req: Request) throws -> User.Public {
     try req
@@ -89,8 +78,11 @@ struct UsersController: RouteCollection {
 }
 
 extension UsersController {
+  /// Looking for existing user in the database with email.
+  ///
   func checkIfUserExists(_ email: String, req: Request) -> EventLoopFuture<Bool> {
-    User.query(on: req.db)
+    User
+      .query(on: req.db)
       .filter(\.$email == email)
       .first()
       .map { $0 != nil }

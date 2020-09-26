@@ -8,11 +8,10 @@
 import Vapor
 import Fluent
 
-enum SessionSource: Int, Content {
-  case signUp
-  case logIn
-}
-
+//  MARK: Token
+/// Setting key and value of the token model for user
+/// authentification.
+///
 final class Token: Model {
 
   static let schema = "tokens"
@@ -39,7 +38,11 @@ final class Token: Model {
   }
 }
 
+// Provide the authentification middleware to find the user for
+// the associated token in the request header.
+//
 extension Token: ModelTokenAuthenticatable {
+  
   static let valueKey = \Token.$value
   static let userKey = \Token.$user
 

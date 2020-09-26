@@ -8,7 +8,15 @@
 import Vapor
 import Fluent
 
+//  MARK: AdminUser
+/// Administrator account at first data base initialization.
+///
+/// credentials:
+///   - email: registered@email.com
+///   - password: password
+///
 struct AdminUser: Migration {
+  
   func prepare(on connection: Database) -> EventLoopFuture<Void> {
 
     let password = try? Bcrypt.hash("password")
