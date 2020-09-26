@@ -9,9 +9,10 @@ import Fluent
 import Vapor
 
 final class User: Model, Content {
+
   static let schema = "users"
 
-  @ID
+  @ID(key: "id")
   var id: UUID?
 
   @Field(key: "email")
@@ -29,16 +30,5 @@ final class User: Model, Content {
     self.email = email
     self.password = password
     self.gender = gender
-  }
-}
-
-struct AdminUser: Migration {
-  func prepare(on connection: Database) -> EventLoopFuture<Void> {
-    let user = User(email: "registered@email.com", password: "password", gender: "male")
-    return user.save(on: connection).transform(to: ())
-  }
-
-  func revert(on database: Database) -> EventLoopFuture<Void> {
-    database.schema("users").update()
   }
 }
