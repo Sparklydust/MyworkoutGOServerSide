@@ -46,9 +46,10 @@ extension User {
   }
 
   func createToken(source: SessionSource) throws -> Token {
-    try Token(userID: requireID(),
-              token: [UInt8].random(count: 16).base64,
-              source: source)
+
+    return try Token(userID: requireID(),
+                     token: [UInt8].random(count: 16).base64,
+                     source: source)
   }
 
   func asPublic() throws -> Public {

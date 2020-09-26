@@ -22,7 +22,7 @@ struct NewSession: Content {
 extension UserSignUp: Validatable {
   static func validations(_ validations: inout Validations) {
     validations.add("email", as: String.self, is: !.empty)
-    validations.add("password", as: String.self, is: .count(6...))
+    validations.add("password", as: String.self, is: .count(1...))
   }
 }
 
@@ -31,44 +31,49 @@ struct UsersController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
     let usersRoute = routes.grouped("api", "users")
 
-    usersRoute.post("signUp", use: create)
-    usersRoute.get("all", use: getAll)
-    usersRoute.get("userID", use: get)
+    usersRoute.post("signup", use: create)
+//    usersRoute.get("all", use: getAll)
+//    usersRoute.get("userID", use: get)
   }
 
-  /// Create a user to the database
+  /// Create a user to the database and retrieve a token and the public profile
   ///
   func create(_ req: Request) throws -> EventLoopFuture<NewSession> {
 
     try UserSignUp.validate(content: req)
     let userSignUp = try req.content.decode(UserSignUp.self)
     let user = try User.create(from: userSignUp)
-    let token: Token!
+    var token: Token!
 
     return checkIfUserExists(userSignUp.email, req: req)
       .flatMap { exists in
         guard !exists else {
           return req.eventLoop.future(error: UserError.emailAlreadyUsed)
         }
-        return user.save(on: req.db)
-      }
+        return user.save(on: req.db) }
+      .flatMap {
+        guard let newToken = try? user.createToken(source: .signUp) else {
+          return req.eventLoop.future(error: Abort(.internalServerError))
+        }
+        token = newToken
+        return token.save(on: req.db) }
       .flatMapThrowing {
         NewSession(token: token.value, user: try user.asPublic())
       }
   }
 
-  /// Fetch all users store in the database
-  ///
-  func getAll(_ req: Request) throws -> EventLoopFuture<[User]> {
-    User.query(on: req.db).all()
-  }
-
-  /// Fetch one user with id store in database
-  ///
-  func get(_ req: Request)throws -> EventLoopFuture<User> {
-    User.find(req.parameters.get("userID"), on: req.db)
-      .unwrap(or: Abort(.notFound))
-  }
+//  /// Fetch all users store in the database
+//  ///
+//  func getAll(_ req: Request) throws -> EventLoopFuture<[User]> {
+//    User.query(on: req.db).all()
+//  }
+//
+//  /// Fetch one user with id store in database
+//  ///
+//  func get(_ req: Request)throws -> EventLoopFuture<User> {
+//    User.find(req.parameters.get("userID"), on: req.db)
+//      .unwrap(or: Abort(.notFound))
+//  }
 }
 
 extension UsersController {

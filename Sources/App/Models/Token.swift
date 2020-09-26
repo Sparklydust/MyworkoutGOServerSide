@@ -20,7 +20,7 @@ final class Token: Model {
   @ID(key: "id")
   var id: UUID?
 
-  @Parent(key: "userID")
+  @Parent(key: "user_id")
   var user: User
 
   @Field(key: "value")
@@ -42,4 +42,8 @@ final class Token: Model {
 extension Token: ModelTokenAuthenticatable {
   static let valueKey = \Token.$value
   static let userKey = \Token.$user
+
+  var isValid: Bool {
+    true
+  }
 }

@@ -14,9 +14,9 @@ public func configure(_ app: Application) throws {
     database: Environment.get("DATABASE_NAME") ?? "MyworkoutGO_database"
   ), as: .psql)
 
-  app.migrations.add(AdminUser())
-  app.migrations.add(CreateToken())
   app.migrations.add(CreateUser())
+  //app.migrations.add(AdminUser())
+  app.migrations.add(CreateToken())
 
   app.logger.logLevel = .debug
 
