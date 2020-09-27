@@ -20,6 +20,7 @@ struct UsersController: RouteCollection {
 
     let usersRoute = routes.grouped("api", "users")
     usersRoute.post("signup", use: create)
+    usersRoute.get("accounts", use: getAll)
 
     let tokenProtected = usersRoute.grouped(Token.authenticator())
     tokenProtected.get("account", use: get)
@@ -73,6 +74,19 @@ struct UsersController: RouteCollection {
       .save(on: req.db)
       .flatMapThrowing {
         NewSession(token: token.value, user: try user.asPublic())
+      }
+  }
+
+  /// Get all users from api.
+  ///
+  func getAll(req: Request) throws -> EventLoopFuture<[User.Public]> {
+    User
+      .query(on: req.db)
+      .all()
+      .flatMapThrowing { users in
+        try users.map { user in
+          try user.asPublic()
+        }
       }
   }
 }
