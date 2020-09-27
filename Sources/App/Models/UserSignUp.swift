@@ -14,7 +14,7 @@ struct UserSignUp: Content {
   
   let email: String
   let password: String
-  let gender: String
+  let gender: Int
 }
 
 extension UserSignUp: Validatable {

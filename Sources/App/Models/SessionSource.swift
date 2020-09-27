@@ -5,7 +5,7 @@
 //  Created by Roland Lariotte on 27/09/2020.
 //
 
-import Foundation
+import Vapor
 
 //  MARK: SessionSource
 /// Enumaration of the user session for api

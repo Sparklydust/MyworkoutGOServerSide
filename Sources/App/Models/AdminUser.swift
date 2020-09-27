@@ -16,7 +16,7 @@ import Fluent
 ///   - password: password
 ///
 struct AdminUser: Migration {
-  
+
   func prepare(on connection: Database) -> EventLoopFuture<Void> {
 
     let password = try? Bcrypt.hash("password")
@@ -26,7 +26,7 @@ struct AdminUser: Migration {
 
     let user = User(email: "registered@email.com",
                     password: hashedPassword,
-                    gender: "male")
+                    gender: 1)
 
     return user.save(on: connection).transform(to: ())
   }

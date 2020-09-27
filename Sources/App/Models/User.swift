@@ -16,7 +16,7 @@ final class User: Model, Content {
   struct Public: Content {
     let id: UUID
     let email: String
-    let gender: String
+    let gender: Int
   }
 
   static let schema = "users"
@@ -31,11 +31,11 @@ final class User: Model, Content {
   var password: String
 
   @Field(key: "gender")
-  var gender: String
+  var gender: Int
 
   init() {}
 
-  init(id: UUID? = nil, email: String, password: String, gender: String) {
+  init(id: UUID? = nil, email: String, password: String, gender: Int) {
     self.email = email
     self.password = password
     self.gender = gender
